@@ -360,7 +360,7 @@ class ParserVisitor {
       stmt = AssignmentStmt(varName, visitor.exp)
     }
 
-    override def visitEAssignmentStmt(ctx: OberonParser.EAssignmentStmtContext): Unit = {
+    /*override def visitEAssignmentStmt(ctx: OberonParser.EAssignmentStmtContext): Unit = {
       val visitor = new ExpressionVisitor()
       ctx.exp.accept(visitor)
 
@@ -370,7 +370,7 @@ class ParserVisitor {
       val designator = EAssignmentVisitor.assignmentAlt
 
       stmt = EAssignmentStmt(designator, visitor.exp)
-    }
+    }*/
 
     override def visitSequenceStmt(ctx: OberonParser.SequenceStmtContext): Unit = {
       val stmts = new ListBuffer[Statement]

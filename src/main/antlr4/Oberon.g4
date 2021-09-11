@@ -73,10 +73,9 @@ qualifiedName
   : (module = Id '::')? name = Id
   ;
 
-
+//removed var statement, fix statement errors in compilation
 statement
- : var = Id ':=' exp = expression                                                                                             #AssignmentStmt
- | des = designator ':=' exp = expression                                                                                     #EAssignmentStmt
+ : des = designator ':=' exp = expression                                                                                     #AssignmentStmt
  | stmt += statement (';' stmt += statement)+                                                                                 #SequenceStmt
  | 'readReal'       '(' var = Id ')'                                                                                          #ReadRealStmt
  | 'readInt'        '(' var = Id ')'                                                                                          #ReadIntStmt
