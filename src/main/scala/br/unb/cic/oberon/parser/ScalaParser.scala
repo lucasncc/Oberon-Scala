@@ -354,23 +354,16 @@ class ParserVisitor {
     var stmt: Statement = _
 
     override def visitAssignmentStmt(ctx: OberonParser.AssignmentStmtContext): Unit = {
-      val varName = ctx.`des`.getText //val varName = ctx.`var`.getText
       val visitor = new ExpressionVisitor()
       ctx.exp.accept(visitor)
-      stmt = AssignmentStmt(varName, visitor.exp)
+
+      val AssignmentVisitor = new AssignmentAlternativeVisitor()
+
+      ctx.designator.accept(AssignmentVisitor)
+      val designator = AssignmentVisitor.assignmentAlt
+
+      stmt = AssignmentStmt(designator, visitor.exp)
     }
-
-    /*override def visitEAssignmentStmt(ctx: OberonParser.EAssignmentStmtContext): Unit = {
-      val visitor = new ExpressionVisitor()
-      ctx.exp.accept(visitor)
-
-      val EAssignmentVisitor = new AssignmentAlternativeVisitor()
-
-      ctx.designator.accept(EAssignmentVisitor)
-      val designator = EAssignmentVisitor.assignmentAlt
-
-      stmt = EAssignmentStmt(designator, visitor.exp)
-    }*/
 
     override def visitSequenceStmt(ctx: OberonParser.SequenceStmtContext): Unit = {
       val stmts = new ListBuffer[Statement]
@@ -554,13 +547,13 @@ class ParserVisitor {
       // Instantiating the values for the basic ForStmt
 
       // var := rangeMin
-      val init = AssignmentStmt(variable.name, rangeMin)
+      val init = AssignmentStmt(VarAssignment(variable.name), rangeMin)
 
       // var <= rangeMax
       val condition = LTEExpression(variable, rangeMax)
 
       // var := var + 1
-      val accumulator = AssignmentStmt(variable.name, AddExpression(variable, IntValue(1)))
+      val accumulator = AssignmentStmt(VarAssignment(variable.name), AddExpression(variable, IntValue(1)))
 
       // stmt; var := var + 1
       val realBlock = SequenceStmt(List(block, accumulator))
@@ -609,7 +602,7 @@ class ParserVisitor {
   }
 
   class AssignmentAlternativeVisitor extends OberonBaseVisitor[Unit] {
-    var assignmentAlt: AssignmentAlternative = _
+    var assignmentAlt: Designator = _
 
     override def visitVarAssignment(ctx: OberonParser.VarAssignmentContext): Unit = {
       val varName = ctx.`var`.getText

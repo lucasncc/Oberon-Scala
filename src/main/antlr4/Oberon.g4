@@ -73,7 +73,6 @@ qualifiedName
   : (module = Id '::')? name = Id
   ;
 
-//removed var statement, fix statement errors in compilation
 statement
  : des = designator ':=' exp = expression                                                                                     #AssignmentStmt
  | stmt += statement (';' stmt += statement)+                                                                                 #SequenceStmt
