@@ -99,7 +99,7 @@ class TypeChecker extends OberonVisitorAdapter {
   }
 
   private def visitAssignment(stmt: Statement) = stmt match {
-    case AssignmentStmt(v, exp) =>
+    case AssignmentStmt(VarAssignment(v), exp) =>
       if (env.lookup(v).isDefined) {
         if (exp.accept(expVisitor).isDefined)
           List()

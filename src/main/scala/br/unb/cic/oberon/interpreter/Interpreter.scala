@@ -83,7 +83,7 @@ class Interpreter extends OberonVisitorAdapter {
           case _ => ???
         }
 
-      case AssignmentStmt(name, exp) =>
+      case AssignmentStmt(VarAssignment(name), exp) =>
         env.setVariable(name, evalExpression(exp))
 
       case SequenceStmt(stmts) =>

@@ -111,13 +111,25 @@ case class PaigesBasedGenerator(lineSpaces: Int = 2) extends CCodeGenerator {
       startSpaces: Int = 2,
       padSpaces: Int = 2
   ): Doc = {
-    statement match {
-      case AssignmentStmt(varName, expression) =>
+    statement match { //To do - incluir os outros tipos de AssignmentStmt - match / case -> Geracao de codigo C -classes e case classes em scala - pattern match scala - ScalaParser - OberonModule
+      case AssignmentStmt(VarAssignment(varName), expression) =>
         formatLine(startSpaces) + Doc.text(varName) + Doc.space + Doc.char(
           '='
         ) + Doc.space + generateExpression(expression) + Doc.char(
           ';'
         ) + Doc.line
+      /*case AssignmentStmt(ArrayAssignment(array, elem), expression) =>
+        formatLine(startSpaces) + Doc.text() + Doc.space + Doc.char(
+          '='
+        ) + Doc.space + generateExpression(expression) + Doc.char(
+          ';'
+        ) + Doc.line
+      case AssignmentStmt(RecordAssignment(record, atrib), expression) =>
+        formatLine(startSpaces) + Doc.text() + Doc.space + Doc.char(
+          '='
+        ) + Doc.space + generateExpression(expression) + Doc.char(
+          ';'
+        ) + Doc.line*/
       case SequenceStmt(stmts) => {
         val multipleStmts = stmts.map {
           case (stmt) => generateStatement(stmt, startSpaces, padSpaces)
@@ -191,7 +203,7 @@ case class PaigesBasedGenerator(lineSpaces: Int = 2) extends CCodeGenerator {
       }
       case ForStmt(init: Statement, condition, stmt) => {
         init match {
-          case AssignmentStmt(varName, expression) => {
+          case AssignmentStmt(VarAssignment(varName), expression) => {
             formatLine(startSpaces) + Doc.text("for (") + Doc.text(
               varName
             ) + Doc.space + Doc.char('=') + Doc.space +
