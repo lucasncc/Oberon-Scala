@@ -167,6 +167,7 @@ trait Statement {
 }
 
 case class ScalaStmt(fn: Environment[Expression] => Unit) extends Statement
+//case class AssignmentStmt(varName: String, exp: Expression) extends Statement <---
 case class AssignmentStmt(designator: Designator, exp: Expression) extends Statement
 case class SequenceStmt(stmts: List[Statement]) extends Statement
 case class ReadLongRealStmt(varName: String) extends Statement

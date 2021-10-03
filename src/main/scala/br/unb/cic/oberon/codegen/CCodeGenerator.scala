@@ -112,6 +112,27 @@ case class PaigesBasedGenerator(lineSpaces: Int = 2) extends CCodeGenerator {
       padSpaces: Int = 2
   ): Doc = {
     statement match { //To do - incluir os outros tipos de AssignmentStmt - match / case -> Geracao de codigo C -classes e case classes em scala - pattern match scala - ScalaParser - OberonModule
+      /*case AssignmentStmt(indexDesignator, exp) =>
+        indexDesignator match {
+          case AssignmentStmt(VarAssignment(varName), exp) =>
+          formatLine(startSpaces) + Doc.text(varName) + Doc.space + Doc.char(
+            '='
+          ) + Doc.space + generateExpression(exp) + Doc.char(
+            ';'
+          ) + Doc.line
+          case AssignmentStmt(ArrayAssignment(array, elem)) =>
+          formatLine(startSpaces) + Doc.text() + Doc.space + Doc.char(
+            '='
+          ) + Doc.space + generateExpression(exp) + Doc.char(
+            ';'
+          ) + Doc.line
+          case AssignmentStmt(RecordAssignment(record, atrib)) =>
+          formatLine(startSpaces) + Doc.text() + Doc.space + Doc.char(
+            '='
+          ) + Doc.space + generateExpression(exp) + Doc.char(
+            ';'
+          ) + Doc.line
+        }*/
       case AssignmentStmt(VarAssignment(varName), expression) =>
         formatLine(startSpaces) + Doc.text(varName) + Doc.space + Doc.char(
           '='
