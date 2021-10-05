@@ -7,6 +7,7 @@ import br.unb.cic.oberon.ast.{LTExpression, LTEExpression, AndExpression, EQExpr
 import br.unb.cic.oberon.parser.OberonParser.ReadIntStmtContext
 import br.unb.cic.oberon.parser.ScalaParser
 import org.scalatest.funsuite.AnyFunSuite
+import br.unb.cic.oberon.ast._
 
 class TypeCheckerTestSuite  extends AnyFunSuite {
 
@@ -32,9 +33,9 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test("Test assignment statement type checker") {
     val visitor = new TypeChecker()
-    val stmt01 = AssignmentStmt("x", IntValue(10))
-    val stmt02 = AssignmentStmt("y", IntValue(10)) // invalid stmt
-    val stmt03 = AssignmentStmt("x", AddExpression(IntValue(5), BoolValue(false))) // invalid stmt
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
+    val stmt02 = AssignmentStmt(VarAssignment("y"), IntValue(10)) // invalid stmt
+    val stmt03 = AssignmentStmt(VarAssignment("x"), AddExpression(IntValue(5), BoolValue(false))) // invalid stmt
 
     visitor.env.setGlobalVariable("x", IntegerType)
 
@@ -45,9 +46,9 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test("Test a sequence of statements type checker") {
     val visitor = new TypeChecker()
-    val stmt01 = AssignmentStmt("x", IntValue(10))
-    val stmt02 = AssignmentStmt("y", IntValue(10)) // invalid stmt
-    val stmt03 = AssignmentStmt("x", AddExpression(IntValue(5), BoolValue(false))) // invalid stmt
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
+    val stmt02 = AssignmentStmt(VarAssignment("y"), IntValue(10)) // invalid stmt
+    val stmt03 = AssignmentStmt(VarAssignment("x"), AddExpression(IntValue(5), BoolValue(false))) // invalid stmt
     val stmt04 = WriteStmt(VarExpression("x"))
     val stmt05 = WriteStmt(VarExpression("y"))
 
@@ -66,7 +67,7 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test("Test if-else statement type checker (with invalid condition)") {
     val visitor = new TypeChecker()
-    val stmt01 = AssignmentStmt("x", IntValue(10))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
 
     visitor.env.setGlobalVariable("x", IntegerType)
 
@@ -77,7 +78,7 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test("Test if-else statement type checker (with invalid then-stmt)") {
     val visitor = new TypeChecker()
-    val stmt01 = AssignmentStmt("x", IntValue(10))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
 
     val stmt02 = IfElseStmt(BoolValue(true), stmt01, None)
     assert(stmt01.accept(visitor).size == 1)
@@ -86,8 +87,8 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test("Test if-else statement type checker (with invalid then-stmt and else-stmt)") {
     val visitor = new TypeChecker()
-    val stmt01 = AssignmentStmt("x", IntValue(10))
-    val stmt02 = AssignmentStmt("y", IntValue(10))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
+    val stmt02 = AssignmentStmt(VarAssignment("y"), IntValue(10))
     val stmt03 = IfElseStmt(BoolValue(true), stmt01, Some(stmt02))
 
     assert(stmt01.accept(visitor).size == 1)
@@ -97,8 +98,8 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test("Test if-else statement type checker") {
     val visitor = new TypeChecker()
-    val stmt01 = AssignmentStmt("x", IntValue(10))
-    val stmt02 = AssignmentStmt("y", IntValue(10))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
+    val stmt02 = AssignmentStmt(VarAssignment("y"), IntValue(10))
 
     visitor.env.setGlobalVariable("x", IntegerType)
     visitor.env.setGlobalVariable("y", IntegerType)
@@ -112,8 +113,8 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test ("Test if-else-if statment type checker (invalid condition 'if')"){
     val visitor = new TypeChecker
-    val stmt01 = AssignmentStmt("x", IntValue(20))
-    val stmt02 = AssignmentStmt("z", IntValue(30))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(20))
+    val stmt02 = AssignmentStmt(VarAssignment("z"), IntValue(30))
 
     visitor.env.setGlobalVariable("x", IntegerType)
     visitor.env.setGlobalVariable("z", IntegerType)
@@ -130,8 +131,8 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test ("Test else-if statment type checker (invalid condition 'else-if')"){
     val visitor = new TypeChecker
-    val stmt01 = AssignmentStmt("x", IntValue(40))
-    val stmt02 = AssignmentStmt("z", IntValue(100))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(40))
+    val stmt02 = AssignmentStmt(VarAssignment("z"), IntValue(100))
 
     visitor.env.setGlobalVariable("x", IntegerType)
     visitor.env.setGlobalVariable("z", IntegerType)
@@ -148,8 +149,8 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test ("Test else-if statment type checker (invalid condition list 'else-if')"){
     val visitor = new TypeChecker
-    val stmt01 = AssignmentStmt("x", IntValue(40))
-    val stmt02 = AssignmentStmt("z", IntValue(100))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(40))
+    val stmt02 = AssignmentStmt(VarAssignment("z"), IntValue(100))
 
     visitor.env.setGlobalVariable("x", IntegerType)
     visitor.env.setGlobalVariable("z", IntegerType)
@@ -169,8 +170,8 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test ("Test else-if statment type checker (invalid then-stmt 'else-if')"){
     val visitor = new TypeChecker
-    val stmt01 = AssignmentStmt("x", IntValue(40))
-    val stmt02 = AssignmentStmt("z", IntValue(100))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(40))
+    val stmt02 = AssignmentStmt(VarAssignment("z"), IntValue(100))
 
     visitor.env.setGlobalVariable("x", IntegerType)
 
@@ -186,9 +187,9 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test("Test if-else-if statment type checker (invalid else-stmt)"){
     val visitor = new TypeChecker
-    val stmt01 = AssignmentStmt("x", IntValue(40))
-    val stmt02 = AssignmentStmt("z", IntValue(100))
-    val stmt03 = AssignmentStmt("w", IntValue(20))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(40))
+    val stmt02 = AssignmentStmt(VarAssignment("z"), IntValue(100))
+    val stmt03 = AssignmentStmt(VarAssignment("w"), IntValue(20))
 
     visitor.env.setGlobalVariable("x", IntegerType)
     visitor.env.setGlobalVariable("z", IntegerType)
@@ -206,9 +207,9 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test("Test if-else-if statment type checker (invalid then-stmt, 'else-if' then-stmt, 'else-if' invalid condition and else-stmt)"){
     val visitor = new TypeChecker
-    val stmt01 = AssignmentStmt("x", IntValue(40))
-    val stmt02 = AssignmentStmt("z", IntValue(100))
-    val stmt03 = AssignmentStmt("w", IntValue(20))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(40))
+    val stmt02 = AssignmentStmt(VarAssignment("z"), IntValue(100))
+    val stmt03 = AssignmentStmt(VarAssignment("w"), IntValue(20))
 
     val stmt04 = ElseIfStmt(IntValue(56), stmt02)
     val stmt05 = ElseIfStmt(IntValue(79), stmt01)
@@ -225,8 +226,8 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test("Test if-else-if statment type checker"){
     val visitor = new TypeChecker
-    val stmt01 = AssignmentStmt("x", IntValue(15))
-    val stmt02 = AssignmentStmt("y", IntValue(5))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(15))
+    val stmt02 = AssignmentStmt(VarAssignment("y"), IntValue(5))
 
     visitor.env.setGlobalVariable("x", IntegerType)
     visitor.env.setGlobalVariable("y", IntegerType)
@@ -244,7 +245,7 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test("Test while statement type checker (with invalid condition)") {
     val visitor = new TypeChecker()
-    val stmt01 = AssignmentStmt("x", IntValue(10))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
 
     visitor.env.setGlobalVariable("x", IntegerType)
 
@@ -255,7 +256,7 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test("Test while statement type checker (with invalid stmt)") {
     val visitor = new TypeChecker()
-    val stmt01 = AssignmentStmt("x", IntValue(10))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
 
     val stmt02 = WhileStmt(BoolValue(true), stmt01)
     assert(stmt01.accept(visitor).size == 1)
@@ -264,7 +265,7 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test("Test while statement type checker") {
     val visitor = new TypeChecker()
-    val stmt01 = AssignmentStmt("x", IntValue(10))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
 
     visitor.env.setGlobalVariable("x", IntegerType)
 
@@ -275,8 +276,8 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test("Test for statement type checker (with invalid init)") {
     val visitor = new TypeChecker()
-    val stmt01 = AssignmentStmt("x", IntValue(10))
-    val stmt02 = AssignmentStmt("y", IntValue(10))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
+    val stmt02 = AssignmentStmt(VarAssignment("y"), IntValue(10))
 
     visitor.env.setGlobalVariable("y", IntegerType)
 
@@ -288,8 +289,8 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test("Test for statement type checker (with invalid condition)") {
     val visitor = new TypeChecker()
-    val stmt01 = AssignmentStmt("x", IntValue(10))
-    val stmt02 = AssignmentStmt("y", IntValue(10))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
+    val stmt02 = AssignmentStmt(VarAssignment("y"), IntValue(10))
 
     visitor.env.setGlobalVariable("x", IntegerType)
     visitor.env.setGlobalVariable("y", IntegerType)
@@ -302,8 +303,8 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test("Test for statement type checker (with invalid stmt)") {
     val visitor = new TypeChecker()
-    val stmt01 = AssignmentStmt("x", IntValue(10))
-    val stmt02 = AssignmentStmt("y", IntValue(100))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
+    val stmt02 = AssignmentStmt(VarAssignment("y"), IntValue(100))
 
     visitor.env.setGlobalVariable("x", IntegerType)
 
@@ -315,8 +316,8 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test("Test for statement type checker") {
     val visitor = new TypeChecker()
-    val stmt01 = AssignmentStmt("x", IntValue(0))
-    val stmt02 = AssignmentStmt("y", IntValue(10))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(0))
+    val stmt02 = AssignmentStmt(VarAssignment("y"), IntValue(10))
 
     visitor.env.setGlobalVariable("x", IntegerType)
     visitor.env.setGlobalVariable("y", IntegerType)
@@ -330,12 +331,12 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
   test("Test switch-case statement type checker RangeCase (invalid case01 min expression) ") {
     val visitor = new TypeChecker()
 
-    val stmt01 = AssignmentStmt("x", IntValue(10))
-    val stmt02 = AssignmentStmt("y", IntValue(15))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
+    val stmt02 = AssignmentStmt(VarAssignment("y"), IntValue(15))
     visitor.env.setGlobalVariable("x", IntegerType)
     visitor.env.setGlobalVariable("y", IntegerType)
 
-    val caseElse = AssignmentStmt("x", IntValue(20))
+    val caseElse = AssignmentStmt(VarAssignment("x"), IntValue(20))
 
 
     val case01 = RangeCase(BoolValue(false), IntValue(20), stmt01)
@@ -354,12 +355,12 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
   test("Test switch-case statement type checker RangeCase (invalid case02 min expression) ") {
     val visitor = new TypeChecker()
 
-    val stmt01 = AssignmentStmt("x", IntValue(10))
-    val stmt02 = AssignmentStmt("y", IntValue(15))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
+    val stmt02 = AssignmentStmt(VarAssignment("y"), IntValue(15))
     visitor.env.setGlobalVariable("x", IntegerType)
     visitor.env.setGlobalVariable("y", IntegerType)
 
-    val caseElse = AssignmentStmt("x", IntValue(20))
+    val caseElse = AssignmentStmt(VarAssignment("x"), IntValue(20))
 
 
     val case01 = RangeCase(IntValue(21), IntValue(20), stmt01)
@@ -378,12 +379,12 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
   test("Test switch-case statement type checker RangeCase (invalid case01 and case02 min expression) ") {
     val visitor = new TypeChecker()
 
-    val stmt01 = AssignmentStmt("x", IntValue(10))
-    val stmt02 = AssignmentStmt("y", IntValue(15))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
+    val stmt02 = AssignmentStmt(VarAssignment("y"), IntValue(15))
     visitor.env.setGlobalVariable("x", IntegerType)
     visitor.env.setGlobalVariable("y", IntegerType)
 
-    val caseElse = AssignmentStmt("x", IntValue(20))
+    val caseElse = AssignmentStmt(VarAssignment("x"), IntValue(20))
 
 
     val case01 = RangeCase(BoolValue(false), IntValue(20), stmt01)
@@ -402,12 +403,12 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
   test("Test switch-case statement type checker RangeCase (invalid case01 and case02 max expression) ") {
     val visitor = new TypeChecker()
 
-    val stmt01 = AssignmentStmt("x", IntValue(10))
-    val stmt02 = AssignmentStmt("y", IntValue(15))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
+    val stmt02 = AssignmentStmt(VarAssignment("y"), IntValue(15))
     visitor.env.setGlobalVariable("x", IntegerType)
     visitor.env.setGlobalVariable("y", IntegerType)
 
-    val caseElse = AssignmentStmt("x", IntValue(20))
+    val caseElse = AssignmentStmt(VarAssignment("x"), IntValue(20))
 
 
     val case01 = RangeCase(IntValue(20),BoolValue(false), stmt01)
@@ -426,12 +427,12 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
   test("Test switch-case statement type checker RangeCase (invalid CaseStmt exp) ") {
     val visitor = new TypeChecker()
 
-    val stmt01 = AssignmentStmt("x", IntValue(10))
-    val stmt02 = AssignmentStmt("y", IntValue(15))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
+    val stmt02 = AssignmentStmt(VarAssignment("y"), IntValue(15))
     visitor.env.setGlobalVariable("x", IntegerType)
     visitor.env.setGlobalVariable("y", IntegerType)
 
-    val caseElse = AssignmentStmt("x", IntValue(20))
+    val caseElse = AssignmentStmt(VarAssignment("x"), IntValue(20))
 
 
     val case01 = RangeCase(IntValue(20),IntValue(30), stmt01)
@@ -450,10 +451,10 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
   test("Test switch-case statement type checker SimpleCase (invalid CaseStmt condition)") {
     val visitor = new TypeChecker()
 
-    val stmt01 = AssignmentStmt("x", IntValue(10))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
     visitor.env.setGlobalVariable("x", IntegerType)
 
-    val caseElse = AssignmentStmt("x", IntValue(20))
+    val caseElse = AssignmentStmt(VarAssignment("x"), IntValue(20))
 
 
     val case01 = SimpleCase(BoolValue(true), stmt01)
@@ -470,10 +471,10 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
   test("Test switch-case statement type checker SimpleCase (invalid case02 condition)") {
     val visitor = new TypeChecker()
 
-    val stmt01 = AssignmentStmt("x", IntValue(10))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
     visitor.env.setGlobalVariable("x", IntegerType)
 
-    val caseElse = AssignmentStmt("x", IntValue(20))
+    val caseElse = AssignmentStmt(VarAssignment("x"), IntValue(20))
 
 
     val case01 = SimpleCase(IntValue(10), stmt01)
@@ -490,10 +491,10 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
   test("Test switch-case statement type checker SimpleCase (invalid case01 and case02 condition)") {
     val visitor = new TypeChecker()
 
-    val stmt01 = AssignmentStmt("x", IntValue(10))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
     visitor.env.setGlobalVariable("x", IntegerType)
 
-    val caseElse = AssignmentStmt("x", IntValue(20))
+    val caseElse = AssignmentStmt(VarAssignment("x"), IntValue(20))
 
 
     val case01 = SimpleCase(Undef(), stmt01)
@@ -510,12 +511,12 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
   test("Test switch-case statement type checker RangeCase") {
     val visitor = new TypeChecker()
 
-    val stmt01 = AssignmentStmt("x", IntValue(10))
-    val stmt02 = AssignmentStmt("y", IntValue(15))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
+    val stmt02 = AssignmentStmt(VarAssignment("y"), IntValue(15))
     visitor.env.setGlobalVariable("x", IntegerType)
     visitor.env.setGlobalVariable("y", IntegerType)
 
-    val caseElse = AssignmentStmt("x", IntValue(20))
+    val caseElse = AssignmentStmt(VarAssignment("x"), IntValue(20))
 
 
     val case01 = RangeCase(IntValue(10), IntValue(20), stmt01)
@@ -534,10 +535,10 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
   test("Test switch-case statement type checker SimpleCase") {
     val visitor = new TypeChecker()
 
-    val stmt01 = AssignmentStmt("x", IntValue(10))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
     visitor.env.setGlobalVariable("x", IntegerType)
 
-    val caseElse = AssignmentStmt("x", IntValue(20))
+    val caseElse = AssignmentStmt(VarAssignment("x"), IntValue(20))
 
 
     val case01 = SimpleCase(IntValue(10), stmt01)
@@ -595,7 +596,7 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
 
   test("Test the type checker of a valid Repeat statement 3"){
     val visitor = new TypeChecker()
-    val stmt01  =  AssignmentStmt("x", IntValue(10))
+    val stmt01  =  AssignmentStmt(VarAssignment("x"), IntValue(10))
 
     val stmt02  = RepeatUntilStmt(BoolValue(true), stmt01)
 
@@ -606,10 +607,10 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
   test("Test a invalid Repeat statement in the type checker") {
     val visitor = new TypeChecker()
 
-    val stmt01 = AssignmentStmt("x", IntValue(10))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
     val stmt02 = ReadIntStmt("x")
     val stmt03 = IfElseStmt(BoolValue(false), stmt01, Some(stmt02))
-    val stmt04 = AssignmentStmt("x", IntValue(20))
+    val stmt04 = AssignmentStmt(VarAssignment("x"), IntValue(20))
     val stmt05 = SequenceStmt(List(stmt01, stmt02, stmt03, stmt04))
     val stmt06 = RepeatUntilStmt(BoolValue(true), stmt05)
 
@@ -640,7 +641,7 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
   test("Test a valid Repeat statement, with nested Repeat statements") {
     val visitor = new TypeChecker()
 
-    val stmt01 = AssignmentStmt("x", IntValue(10))
+    val stmt01 = AssignmentStmt(VarAssignment("x"), IntValue(10))
     val repeatStmt01 = RepeatUntilStmt(BoolValue(true), stmt01)
     val repeatStmt02 = RepeatUntilStmt(BoolValue(true), repeatStmt01)
     val repeatStmt03 = RepeatUntilStmt(BoolValue(true), repeatStmt02)
@@ -657,7 +658,7 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
   test("Test a invalid Repeat statement, with nested Repeat statements") {
     val visitor = new TypeChecker()
 
-    val stmt01       = AssignmentStmt("x", IntValue(10))
+    val stmt01       = AssignmentStmt(VarAssignment("x"), IntValue(10))
     val repeatStmt01 = RepeatUntilStmt(BoolValue(true), stmt01)
     val repeatStmt02 = RepeatUntilStmt(BoolValue(true), repeatStmt01)
     val repeatStmt03 = RepeatUntilStmt(BoolValue(true), repeatStmt02)
@@ -674,7 +675,7 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
     val visitor = new TypeChecker()
 
     val boolVar    = VarExpression("flag")
-    val stmt01     = AssignmentStmt(boolVar.name, BoolValue(true))
+    val stmt01     = AssignmentStmt(VarAssignment(boolVar.name), BoolValue(true))
     val repeatStmt = RepeatUntilStmt(boolVar, stmt01)
 
     visitor.env.setGlobalVariable("flag", BooleanType)
@@ -686,7 +687,7 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
   test("Test a valid Repeat statement, with a sequence of statements") {
     val visitor = new TypeChecker()
 
-    val stmt01     = AssignmentStmt("x", BoolValue(false))
+    val stmt01     = AssignmentStmt(VarAssignment("x"), BoolValue(false))
     val repeatStmt = RepeatUntilStmt(BoolValue(true), stmt01)
     val stmt02     = SequenceStmt(List(stmt01, repeatStmt, stmt01, repeatStmt))
 
@@ -698,7 +699,7 @@ class TypeCheckerTestSuite  extends AnyFunSuite {
   test("Test a invalid Repeat statement, with a sequence of statements") {
     val visitor = new TypeChecker()
 
-    val stmt01     = AssignmentStmt("x", BoolValue(false))
+    val stmt01     = AssignmentStmt(VarAssignment("x"), BoolValue(false))
     val repeatStmt = RepeatUntilStmt(BoolValue(true), stmt01)
     val stmt02     = SequenceStmt(List(stmt01, repeatStmt, stmt01, repeatStmt))
 

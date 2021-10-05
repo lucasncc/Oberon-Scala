@@ -32,13 +32,13 @@ class CoreTransformerTest extends AnyFunSuite {
     val sequence = coreModule.stmt.get.asInstanceOf[SequenceStmt]
     val stmts = sequence.stmts
 
-    assert(stmts.head == AssignmentStmt("x",IntValue(10)))
+    assert(stmts.head == AssignmentStmt(VarAssignment("x"),IntValue(10)))
     assert(stmts(1) == WhileStmt(BoolValue(true), SequenceStmt(List(
       WriteStmt(VarExpression("x")),
       IfElseStmt(LTExpression(VarExpression("x"),IntValue(0)),
         ExitStmt(),
         None),
-      AssignmentStmt("x",SubExpression(VarExpression("x"),IntValue(1)))
+      AssignmentStmt(VarAssignment("x"),SubExpression(VarExpression("x"),IntValue(1)))
     ))))
   }
 
@@ -84,14 +84,14 @@ class CoreTransformerTest extends AnyFunSuite {
     val sequence = coreModule.stmt.get.asInstanceOf[SequenceStmt]
     val stmts = sequence.stmts
 
-    assert(stmts.head == AssignmentStmt("x",IntValue(2)))
-    assert(stmts(1) == AssignmentStmt("factorial",IntValue(1)))
+    assert(stmts.head == AssignmentStmt(VarAssignment("x"),IntValue(2)))
+    assert(stmts(1) == AssignmentStmt(VarAssignment("factorial"),IntValue(1)))
     assert(stmts(2) == WhileStmt(BoolValue(true), SequenceStmt(List(
       IfElseStmt(GTExpression(VarExpression("x"), IntValue(5)),
         ExitStmt(),
         None),
-      AssignmentStmt("factorial", MultExpression(VarExpression("factorial"),VarExpression("x"))),
-      AssignmentStmt("x", AddExpression(VarExpression("x"), IntValue(1)))
+      AssignmentStmt(VarAssignment("factorial"), MultExpression(VarExpression("factorial"),VarExpression("x"))),
+      AssignmentStmt(VarAssignment("x"), AddExpression(VarExpression("x"), IntValue(1)))
     ))))
   }
 
@@ -137,14 +137,14 @@ class CoreTransformerTest extends AnyFunSuite {
     val sequence = coreModule.stmt.get.asInstanceOf[SequenceStmt]
     val stmts = sequence.stmts
 
-    assert(stmts.head == AssignmentStmt("x",IntValue(0)))
-    assert(stmts(1) == AssignmentStmt("y",IntValue(0)))
+    assert(stmts.head == AssignmentStmt(VarAssignment("x"),IntValue(0)))
+    assert(stmts(1) == AssignmentStmt(VarAssignment("y"),IntValue(0)))
     assert(stmts(2) == WhileStmt(BoolValue(true), SequenceStmt(List(
-      AssignmentStmt("x", AddExpression(VarExpression("x"),IntValue(1))),
-      AssignmentStmt("i",IntValue(0)),
+      AssignmentStmt(VarAssignment("x"), AddExpression(VarExpression("x"),IntValue(1))),
+      AssignmentStmt(VarAssignment("i"),IntValue(0)),
       WhileStmt(BoolValue(true), SequenceStmt(List(
-        AssignmentStmt("y", AddExpression(VarExpression("y"),IntValue(1))),
-        AssignmentStmt("i", AddExpression(VarExpression("i"),IntValue(1))),
+        AssignmentStmt(VarAssignment("y"), AddExpression(VarExpression("y"),IntValue(1))),
+        AssignmentStmt(VarAssignment("i"), AddExpression(VarExpression("i"),IntValue(1))),
         IfElseStmt(EQExpression(VarExpression("i"), IntValue(10)),
           ExitStmt(),
           None)
@@ -199,14 +199,14 @@ class CoreTransformerTest extends AnyFunSuite {
     val sequence = coreModule.stmt.get.asInstanceOf[SequenceStmt]
     val stmts = sequence.stmts
 
-    assert(stmts.head == AssignmentStmt("x",IntValue(0)))
-    assert(stmts(1) == AssignmentStmt("lim",IntValue(10)))
+    assert(stmts.head == AssignmentStmt(VarAssignment("x"),IntValue(0)))
+    assert(stmts(1) == AssignmentStmt(VarAssignment("lim"),IntValue(10)))
     assert(stmts(2) == WhileStmt(BoolValue(true),SequenceStmt(List(
       IfElseStmt(EQExpression(VarExpression("x"), IntValue(0)),
-        AssignmentStmt("sum",IntValue(0)),
-        Some(AssignmentStmt("sum",AddExpression(VarExpression("sum"),VarExpression("x"))))
+        AssignmentStmt(VarAssignment("sum"),IntValue(0)),
+        Some(AssignmentStmt(VarAssignment("sum"),AddExpression(VarExpression("sum"),VarExpression("x"))))
       ),
-      AssignmentStmt("x", AddExpression(VarExpression("x"), IntValue(1))),
+      AssignmentStmt(VarAssignment("x"), AddExpression(VarExpression("x"), IntValue(1))),
       IfElseStmt(GTExpression(VarExpression("x"),VarExpression("lim")),
         ExitStmt(),
         None)
@@ -256,14 +256,14 @@ class CoreTransformerTest extends AnyFunSuite {
     val sequence = coreModule.stmt.get.asInstanceOf[SequenceStmt]
     val stmts = sequence.stmts
 
-    assert(stmts.head == AssignmentStmt("x",IntValue(0)))
-    assert(stmts(1) == AssignmentStmt("y",IntValue(0)))
+    assert(stmts.head == AssignmentStmt(VarAssignment("x"),IntValue(0)))
+    assert(stmts(1) == AssignmentStmt(VarAssignment("y"),IntValue(0)))
     assert(stmts(2) == WhileStmt(BoolValue(true), SequenceStmt(List(
       IfElseStmt(GTExpression(VarExpression("x"),IntValue(5)),
-        AssignmentStmt("y", AddExpression(VarExpression("y"), VarExpression("x"))),
+        AssignmentStmt(VarAssignment("y"), AddExpression(VarExpression("y"), VarExpression("x"))),
         None
       ),
-      AssignmentStmt("x", AddExpression(VarExpression("x"), IntValue(1))),
+      AssignmentStmt(VarAssignment("x"), AddExpression(VarExpression("x"), IntValue(1))),
       IfElseStmt(GTExpression(VarExpression("x"), IntValue(10)),
         ExitStmt(),
         None)
@@ -313,10 +313,10 @@ class CoreTransformerTest extends AnyFunSuite {
     val sequence = coreModule.stmt.get.asInstanceOf[SequenceStmt]
     val stmts = sequence.stmts
 
-    assert(stmts.head == AssignmentStmt("x",IntValue(0)))
-    assert(stmts(1) == AssignmentStmt("y",IntValue(20)))
+    assert(stmts.head == AssignmentStmt(VarAssignment("x"),IntValue(0)))
+    assert(stmts(1) == AssignmentStmt(VarAssignment("y"),IntValue(20)))
     assert(stmts(2) == WhileStmt(BoolValue(true), SequenceStmt(List(
-      AssignmentStmt("x", AddExpression(VarExpression("x"), IntValue(1))),
+      AssignmentStmt(VarAssignment("x"), AddExpression(VarExpression("x"), IntValue(1))),
       IfElseStmt(EQExpression(VarExpression("x"), VarExpression("y")),
         ExitStmt(),
         None)
@@ -369,13 +369,13 @@ class CoreTransformerTest extends AnyFunSuite {
     val sequence = coreModule.stmt.get.asInstanceOf[SequenceStmt]
     val stmts = sequence.stmts
 
-    assert(stmts.head == AssignmentStmt("x",IntValue(0)))
-    assert(stmts(1) == AssignmentStmt("y",IntValue(0)))
+    assert(stmts.head == AssignmentStmt(VarAssignment("x"),IntValue(0)))
+    assert(stmts(1) == AssignmentStmt(VarAssignment("y"),IntValue(0)))
 
     assert(stmts(2) == WhileStmt(BoolValue(true), SequenceStmt(List(
-      AssignmentStmt("x",AddExpression(VarExpression("x"),IntValue(1))),
+      AssignmentStmt(VarAssignment("x"),AddExpression(VarExpression("x"),IntValue(1))),
       WhileStmt(BoolValue(true), SequenceStmt(List(
-        AssignmentStmt("y",AddExpression(VarExpression("y"),IntValue(1))),
+        AssignmentStmt(VarAssignment("y"),AddExpression(VarExpression("y"),IntValue(1))),
         IfElseStmt(GTEExpression(VarExpression("y"),IntValue(10)),
           ExitStmt(),
           None
@@ -434,10 +434,10 @@ class CoreTransformerTest extends AnyFunSuite {
       case _ => fail("we are expecting three stmts in the main block")
     }
     // now we can assume that the main block contains a sequence of stmts
-    assert(stmts.head == AssignmentStmt("x", IntValue(2)))
-    assert(stmts(1) == AssignmentStmt("y", IntValue(2)))
+    assert(stmts.head == AssignmentStmt(VarAssignment("x"), IntValue(2)))
+    assert(stmts(1) == AssignmentStmt(VarAssignment("y"), IntValue(2)))
     assert(stmts(2) == WriteStmt(FunctionCallExpression("power",List(VarExpression("x"), VarExpression("y")))))
-    assert(coreModule.procedures.head.stmt == SequenceStmt(List(AssignmentStmt("r",VarExpression("b")), IfElseStmt(OrExpression(LTExpression(VarExpression("b"),IntValue(0)),LTExpression(VarExpression("e"),IntValue(0))),ReturnStmt(IntValue(0)),None), IfElseStmt(EQExpression(VarExpression("e"),IntValue(0)),ReturnStmt(IntValue(1)),None), WhileStmt(BoolValue(true),SequenceStmt(List(AssignmentStmt("r",MultExpression(VarExpression("r"),VarExpression("b"))), AssignmentStmt("e",SubExpression(VarExpression("e"),IntValue(1))), IfElseStmt(LTEExpression(VarExpression("e"),IntValue(1)),ExitStmt(),None)))), ReturnStmt(VarExpression("r")))))
+    assert(coreModule.procedures.head.stmt == SequenceStmt(List(AssignmentStmt(VarAssignment("r"),VarExpression("b")), IfElseStmt(OrExpression(LTExpression(VarExpression("b"),IntValue(0)),LTExpression(VarExpression("e"),IntValue(0))),ReturnStmt(IntValue(0)),None), IfElseStmt(EQExpression(VarExpression("e"),IntValue(0)),ReturnStmt(IntValue(1)),None), WhileStmt(BoolValue(true),SequenceStmt(List(AssignmentStmt(VarAssignment("r"),MultExpression(VarExpression("r"),VarExpression("b"))), AssignmentStmt(VarAssignment("e"),SubExpression(VarExpression("e"),IntValue(1))), IfElseStmt(LTEExpression(VarExpression("e"),IntValue(1)),ExitStmt(),None)))), ReturnStmt(VarExpression("r")))))
   }
   /** ###### RepeatUntil Tests end here ###### */
 
@@ -485,12 +485,12 @@ class CoreTransformerTest extends AnyFunSuite {
     val sequence = coreModule.stmt.get.asInstanceOf[SequenceStmt]
     val stmts = sequence.stmts
 
-    assert(stmts.head == AssignmentStmt("x", IntValue(5)))
-    assert(stmts(1) == AssignmentStmt("z", IntValue(0)))
-    assert(stmts(2) == AssignmentStmt("y", IntValue(0)))
+    assert(stmts.head == AssignmentStmt(VarAssignment("x"), IntValue(5)))
+    assert(stmts(1) == AssignmentStmt(VarAssignment("z"), IntValue(0)))
+    assert(stmts(2) == AssignmentStmt(VarAssignment("y"), IntValue(0)))
     assert(stmts(3) == WhileStmt(LTEExpression(VarExpression("y"), VarExpression("x")), SequenceStmt(List(
-      AssignmentStmt("z", AddExpression(VarExpression("z"), VarExpression("y"))),
-      AssignmentStmt("y", AddExpression(VarExpression("y"), IntValue(1)))
+      AssignmentStmt(VarAssignment("z"), AddExpression(VarExpression("z"), VarExpression("y"))),
+      AssignmentStmt(VarAssignment("y"), AddExpression(VarExpression("y"), IntValue(1)))
     ))))
     assert(stmts(4) == WriteStmt(VarExpression("z")))
   }
@@ -538,16 +538,16 @@ class CoreTransformerTest extends AnyFunSuite {
     val sequence = coreModule.stmt.get.asInstanceOf[SequenceStmt]
     val stmts = sequence.stmts
 
-    assert(stmts.head == AssignmentStmt("x", IntValue(0)))
+    assert(stmts.head == AssignmentStmt(VarAssignment("x"), IntValue(0)))
     assert(stmts(1) == WhileStmt(LTExpression(VarExpression("x"), VarExpression(("y"))), SequenceStmt(List(
       WriteStmt(VarExpression("x")),
-      AssignmentStmt("z", IntValue(0)),
+      AssignmentStmt(VarAssignment("z"), IntValue(0)),
       WhileStmt(LTExpression(VarExpression("z"), VarExpression("y")), SequenceStmt(List(
-        AssignmentStmt("k", AddExpression(VarExpression("z"), VarExpression("x"))),
-        AssignmentStmt("z", AddExpression(VarExpression("z"), IntValue(1))),
+        AssignmentStmt(VarAssignment("k"), AddExpression(VarExpression("z"), VarExpression("x"))),
+        AssignmentStmt(VarAssignment("z"), AddExpression(VarExpression("z"), IntValue(1))),
         WriteStmt(VarExpression("k"))
       ))),
-      AssignmentStmt("x", AddExpression(VarExpression("x"), IntValue(1)))
+      AssignmentStmt(VarAssignment("x"), AddExpression(VarExpression("x"), IntValue(1)))
     ))))
 
   }
@@ -597,12 +597,12 @@ class CoreTransformerTest extends AnyFunSuite {
     val sequence = coreModule.stmt.get.asInstanceOf[SequenceStmt]
     val stmts = sequence.stmts
 
-    assert(stmts.head == AssignmentStmt("x", IntValue(1)))
+    assert(stmts.head == AssignmentStmt(VarAssignment("x"), IntValue(1)))
     assert(stmts(1) == IfElseStmt(LTExpression(VarExpression("x"), IntValue(10)),
-      AssignmentStmt("y", IntValue(1)),
+      AssignmentStmt(VarAssignment("y"), IntValue(1)),
       Some(IfElseStmt(GTExpression(VarExpression("x"), IntValue(10)),
-        AssignmentStmt("y", IntValue(2)),
-        Some(AssignmentStmt("y", IntValue(3)))))
+        AssignmentStmt(VarAssignment("y"), IntValue(2)),
+        Some(AssignmentStmt(VarAssignment("y"), IntValue(3)))))
     ))
     assert((stmts(2) == WriteStmt(VarExpression("y"))))
   }
@@ -650,12 +650,12 @@ class CoreTransformerTest extends AnyFunSuite {
     val sequence = coreModule.stmt.get.asInstanceOf[SequenceStmt]
     val stmts = sequence.stmts
 
-    assert(stmts.head == AssignmentStmt("x", IntValue(10)))
+    assert(stmts.head == AssignmentStmt(VarAssignment("x"), IntValue(10)))
     assert(stmts(1) == IfElseStmt(LTExpression(VarExpression("x"), IntValue(10)),
-      AssignmentStmt("y", IntValue(1)),
+      AssignmentStmt(VarAssignment("y"), IntValue(1)),
       Some(IfElseStmt(GTExpression(VarExpression("x"), IntValue(10)),
-        AssignmentStmt("y", IntValue(2)),
-        Some(AssignmentStmt("y", IntValue(3)))))
+        AssignmentStmt(VarAssignment("y"), IntValue(2)),
+        Some(AssignmentStmt(VarAssignment("y"), IntValue(3)))))
     ))
     assert((stmts(2) == WriteStmt(VarExpression("y"))))
   }
@@ -702,16 +702,16 @@ class CoreTransformerTest extends AnyFunSuite {
     val sequence = coreModule.stmt.get.asInstanceOf[SequenceStmt]
     val stmts = sequence.stmts
 
-    assert(stmts.head == AssignmentStmt("x", IntValue(55)))
+    assert(stmts.head == AssignmentStmt(VarAssignment("x"), IntValue(55)))
     assert(stmts(1) == IfElseStmt(LTExpression(VarExpression("x"), IntValue(13)),
-      AssignmentStmt("y", IntValue(1)),
+      AssignmentStmt(VarAssignment("y"), IntValue(1)),
       Some(IfElseStmt(LTExpression(VarExpression("x"), IntValue(21)),
-        AssignmentStmt("y", IntValue(2)),
+        AssignmentStmt(VarAssignment("y"), IntValue(2)),
         Some(IfElseStmt(LTExpression(VarExpression("x"), IntValue(35)),
-          AssignmentStmt("y", IntValue(3)),
+          AssignmentStmt(VarAssignment("y"), IntValue(3)),
           Some(IfElseStmt(LTExpression(VarExpression("x"), IntValue(50)),
-            AssignmentStmt("y", IntValue(4)),
-            Some(AssignmentStmt("y", IntValue(5)))))))))
+            AssignmentStmt(VarAssignment("y"), IntValue(4)),
+            Some(AssignmentStmt(VarAssignment("y"), IntValue(5)))))))))
     ))
     assert((stmts(2) == WriteStmt(VarExpression("y"))))
   }
@@ -758,12 +758,12 @@ class CoreTransformerTest extends AnyFunSuite {
     val sequence = coreModule.stmt.get.asInstanceOf[SequenceStmt]
     val stmts = sequence.stmts
 
-    assert(stmts.head == AssignmentStmt("x", IntValue(0)))
+    assert(stmts.head == AssignmentStmt(VarAssignment("x"), IntValue(0)))
     assert(stmts(1) == IfElseStmt(LTExpression(VarExpression("x"), IntValue(0)),
-      AssignmentStmt("y", IntValue(1)),
+      AssignmentStmt(VarAssignment("y"), IntValue(1)),
       Some(IfElseStmt(GTExpression(VarExpression("x"), IntValue(0)),
-        AssignmentStmt("y", IntValue(2)),
-        Some(AssignmentStmt("y", IntValue(3)))))
+        AssignmentStmt(VarAssignment("y"), IntValue(2)),
+        Some(AssignmentStmt(VarAssignment("y"), IntValue(3)))))
     ))
     assert((stmts(2) == WriteStmt(VarExpression("y"))))
   }
@@ -811,16 +811,16 @@ class CoreTransformerTest extends AnyFunSuite {
     val sequence = coreModule.stmt.get.asInstanceOf[SequenceStmt]
     val stmts = sequence.stmts
 
-    assert(stmts.head == AssignmentStmt("xs", IntValue(0)))
+    assert(stmts.head == AssignmentStmt(VarAssignment("xs"), IntValue(0)))
     assert(stmts(1) == IfElseStmt(EQExpression(VarExpression("xs"), IntValue(1)),
-      AssignmentStmt("xs", IntValue(5)),
+      AssignmentStmt(VarAssignment("xs"), IntValue(5)),
       Some(IfElseStmt(EQExpression(VarExpression("xs"), IntValue(2)),
-        AssignmentStmt("xs", IntValue(10)),
+        AssignmentStmt(VarAssignment("xs"), IntValue(10)),
         Some(IfElseStmt(EQExpression(VarExpression("xs"), IntValue(3)),
-          AssignmentStmt("xs", IntValue(20)),
+          AssignmentStmt(VarAssignment("xs"), IntValue(20)),
           Some(IfElseStmt(EQExpression(VarExpression("xs"), IntValue(4)),
-            AssignmentStmt("xs", IntValue(40)),
-            Some(AssignmentStmt("xs", IntValue(0)))))))))
+            AssignmentStmt(VarAssignment("xs"), IntValue(40)),
+            Some(AssignmentStmt(VarAssignment("xs"), IntValue(0)))))))))
     ))
     assert((stmts(2) == WriteStmt(VarExpression("xs"))))
   }
@@ -865,16 +865,16 @@ class CoreTransformerTest extends AnyFunSuite {
     val sequence = coreModule.stmt.get.asInstanceOf[SequenceStmt]
     val stmts = sequence.stmts
 
-    assert(stmts.head == AssignmentStmt("xs", IntValue(2)))
+    assert(stmts.head == AssignmentStmt(VarAssignment("xs"), IntValue(2)))
     assert(stmts(1) == IfElseStmt(EQExpression(VarExpression("xs"), IntValue(1)),
-      AssignmentStmt("xs", IntValue(5)),
+      AssignmentStmt(VarAssignment("xs"), IntValue(5)),
       Some(IfElseStmt(EQExpression(VarExpression("xs"), IntValue(2)),
-        AssignmentStmt("xs", IntValue(10)),
+        AssignmentStmt(VarAssignment("xs"), IntValue(10)),
         Some(IfElseStmt(EQExpression(VarExpression("xs"), IntValue(3)),
-          AssignmentStmt("xs", IntValue(20)),
+          AssignmentStmt(VarAssignment("xs"), IntValue(20)),
           Some(IfElseStmt(EQExpression(VarExpression("xs"), IntValue(4)),
-            AssignmentStmt("xs", IntValue(40)),
-            Some(AssignmentStmt("xs", IntValue(0)))))))))
+            AssignmentStmt(VarAssignment("xs"), IntValue(40)),
+            Some(AssignmentStmt(VarAssignment("xs"), IntValue(0)))))))))
     ))
     assert((stmts(2) == WriteStmt(VarExpression("xs"))))
   }
@@ -920,16 +920,16 @@ class CoreTransformerTest extends AnyFunSuite {
     val sequence = coreModule.stmt.get.asInstanceOf[SequenceStmt]
     val stmts = sequence.stmts
 
-    assert(stmts.head == AssignmentStmt("xs", IntValue(1)))
-    assert(stmts(1) == AssignmentStmt("min", IntValue(10)))
-    assert(stmts(2) == AssignmentStmt("max", IntValue(20)))
+    assert(stmts.head == AssignmentStmt(VarAssignment("xs"), IntValue(1)))
+    assert(stmts(1) == AssignmentStmt(VarAssignment("min"), IntValue(10)))
+    assert(stmts(2) == AssignmentStmt(VarAssignment("max"), IntValue(20)))
     assert(stmts(3) == IfElseStmt(EQExpression(VarExpression("xs"), IntValue(1)),
-      AssignmentStmt("xs", IntValue(5)),
+      AssignmentStmt(VarAssignment("xs"), IntValue(5)),
       Some(IfElseStmt(EQExpression(VarExpression("xs"), IntValue(2)),
-        AssignmentStmt("xs", IntValue(10)),
+        AssignmentStmt(VarAssignment("xs"), IntValue(10)),
         Some(IfElseStmt(AndExpression(LTEExpression(VarExpression("min"), VarExpression("xs")), LTEExpression(VarExpression("xs"), VarExpression("max"))),
-          AssignmentStmt("xs", IntValue(20)),
-          Some(AssignmentStmt("xs", IntValue(0)))))))
+          AssignmentStmt(VarAssignment("xs"), IntValue(20)),
+          Some(AssignmentStmt(VarAssignment("xs"), IntValue(0)))))))
     ))
     assert((stmts(4) == WriteStmt(VarExpression("xs"))))
   }
@@ -974,16 +974,16 @@ class CoreTransformerTest extends AnyFunSuite {
     val sequence = coreModule.stmt.get.asInstanceOf[SequenceStmt]
     val stmts = sequence.stmts
 
-    assert(stmts.head == AssignmentStmt("xs", IntValue(12)))
-    assert(stmts(1) == AssignmentStmt("min", IntValue(10)))
-    assert(stmts(2) == AssignmentStmt("max", IntValue(20)))
+    assert(stmts.head == AssignmentStmt(VarAssignment("xs"), IntValue(12)))
+    assert(stmts(1) == AssignmentStmt(VarAssignment("min"), IntValue(10)))
+    assert(stmts(2) == AssignmentStmt(VarAssignment("max"), IntValue(20)))
     assert(stmts(3) == IfElseStmt(EQExpression(VarExpression("xs"), IntValue(1)),
-      AssignmentStmt("xs", IntValue(5)),
+      AssignmentStmt(VarAssignment("xs"), IntValue(5)),
       Some(IfElseStmt(EQExpression(VarExpression("xs"), IntValue(2)),
-        AssignmentStmt("xs", IntValue(10)),
+        AssignmentStmt(VarAssignment("xs"), IntValue(10)),
         Some(IfElseStmt(AndExpression(LTEExpression(VarExpression("min"), VarExpression("xs")), LTEExpression(VarExpression("xs"), VarExpression("max"))),
-          AssignmentStmt("xs", IntValue(20)),
-          Some(AssignmentStmt("xs", IntValue(0)))))))
+          AssignmentStmt(VarAssignment("xs"), IntValue(20)),
+          Some(AssignmentStmt(VarAssignment("xs"), IntValue(0)))))))
     ))
     assert((stmts(4) == WriteStmt(VarExpression("xs"))))
   }

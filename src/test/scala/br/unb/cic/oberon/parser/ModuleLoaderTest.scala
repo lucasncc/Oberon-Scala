@@ -24,7 +24,7 @@ class ModuleLoaderTestSuite extends AnyFunSuite {
     val expected = makeModule(
       name = "A",
       variables = List(VariableDeclaration("A::x", IntegerType)),
-      stmt = Some(SequenceStmt(List(AssignmentStmt("A::x", IntValue(1)))))
+      stmt = Some(SequenceStmt(List(AssignmentStmt(VarAssignment("A::x"), IntValue(1)))))
     )
     assert(module == expected)
   }
@@ -36,7 +36,7 @@ class ModuleLoaderTestSuite extends AnyFunSuite {
       name = "B",
       variables = List(VariableDeclaration("A::x", IntegerType)),
       stmt = Some(SequenceStmt(List(
-          AssignmentStmt("A::x", IntValue(1)),
+          AssignmentStmt(VarAssignment("A::x"), IntValue(1)),
           WriteStmt(VarExpression("A::x"))
       )))
     )

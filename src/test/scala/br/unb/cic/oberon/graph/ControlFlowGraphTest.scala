@@ -24,7 +24,7 @@ class ControlFlowGraphTest extends AnyFunSuite {
    *
    */
   test("Test control flow graph for stmt16.oberon") {
-    val s3_1 = AssignmentStmt("max", VarExpression("x"))
+    val s3_1 = AssignmentStmt(VarAssignment("max"), VarExpression("x"))
     val s1 = ReadIntStmt("x")
     val s2 = ReadIntStmt("max")
     val s3 = IfElseStmt(GTExpression(VarExpression("x"), VarExpression("max")), s3_1 , None)
@@ -78,7 +78,7 @@ test("Test control flow graph for stmt01.oberon") {
   test("Test control flow graph for stmt02.oberon") {
     val s1 = ReadIntStmt("x")
     val s2 = ReadIntStmt("y")
-    val s3 = AssignmentStmt("z", AddExpression(VarExpression("x"), VarExpression("y")))
+    val s3 = AssignmentStmt(VarAssignment("z"), AddExpression(VarExpression("x"), VarExpression("y")))
     val s4 = WriteStmt(VarExpression("z"))
 
     var expected = Graph[GraphNode, GraphEdge.DiEdge]()
@@ -101,7 +101,7 @@ test("Test control flow graph for stmt01.oberon") {
   }
   /** Whilestmt test */
   ignore("Test control flow graph for stmt04.oberon") {
-    val s3_1 = AssignmentStmt("x", MultExpression(VarExpression("x"), VarExpression("x")))
+    val s3_1 = AssignmentStmt(VarAssignment("x"), MultExpression(VarExpression("x"), VarExpression("x")))
     val s1 = ReadIntStmt("x")
     val s2 = ReadIntStmt("y")
     val s3 = WhileStmt(LTExpression(VarExpression("x"), VarExpression("y")), s3_1)
@@ -147,9 +147,9 @@ test("Test control flow graph for stmt01.oberon") {
 
     val s3_1 = ReadIntStmt("z")
     val s1 = ReadIntStmt("x")
-    val s2 = AssignmentStmt("y", IntValue(0))
+    val s2 = AssignmentStmt(VarAssignment("y"), IntValue(0))
     val s3 = ForStmt(s2, LTExpression(VarExpression("y"), VarExpression("x")), s3_1)
-    val s4 = AssignmentStmt("z", DivExpression(VarExpression("z"), AddExpression(VarExpression("y"), IntValue(1))))
+    val s4 = AssignmentStmt(VarAssignment("z"), DivExpression(VarExpression("z"), AddExpression(VarExpression("y"), IntValue(1))))
     val s5 = WriteStmt(VarExpression("z"))
 
 
@@ -203,22 +203,22 @@ test("Test control flow graph for stmt01.oberon") {
      */
 
     val s1 = ReadIntStmt("x")
-    val s2 = AssignmentStmt("v", IntValue(0))
+    val s2 = AssignmentStmt(VarAssignment("v"), IntValue(0))
 
-    val s3_0 = AssignmentStmt("y", IntValue(0))
+    val s3_0 = AssignmentStmt(VarAssignment("y"), IntValue(0))
     val s3_1 = ReadIntStmt("w")
-    val s3_2 = AssignmentStmt("v", AddExpression(VarExpression("v"), MultExpression(VarExpression("w"), AddExpression(VarExpression("y"), IntValue(1)))))
+    val s3_2 = AssignmentStmt(VarAssignment("v"), AddExpression(VarExpression("v"), MultExpression(VarExpression("w"), AddExpression(VarExpression("y"), IntValue(1)))))
     val s3 = ForStmt(s3_0, LTExpression(VarExpression("y"), VarExpression("x")), s3_1)
 
-    val s4 = AssignmentStmt("v", DivExpression(VarExpression("v"), VarExpression("x")))
+    val s4 = AssignmentStmt(VarAssignment("v"), DivExpression(VarExpression("v"), VarExpression("x")))
 
-    val s5_0 = AssignmentStmt("z", IntValue(0))
+    val s5_0 = AssignmentStmt(VarAssignment("z"), IntValue(0))
     val s5_1 = ReadIntStmt("w")
-    val s5_2 = AssignmentStmt("u", AddExpression(VarExpression("u"), VarExpression("w")))
+    val s5_2 = AssignmentStmt(VarAssignment("u"), AddExpression(VarExpression("u"), VarExpression("w")))
     val s5 = ForStmt(s5_0, LTExpression(VarExpression("z"), VarExpression("x")), s5_1)
 
 
-    val s6 = AssignmentStmt("u", DivExpression(VarExpression("u"), VarExpression("x")))
+    val s6 = AssignmentStmt(VarAssignment("u"), DivExpression(VarExpression("u"), VarExpression("x")))
     val s7 = WriteStmt(VarExpression("v"))
     val s8 = WriteStmt(VarExpression("u"))
 
@@ -276,8 +276,8 @@ test("Test control flow graph for stmt01.oberon") {
 
     val s1 = ReadIntStmt("x")
 
-    val s2_0 = AssignmentStmt("y", VarExpression("x"))
-    val s2_1 = AssignmentStmt("y", MultExpression(VarExpression("y"), VarExpression("y")))
+    val s2_0 = AssignmentStmt(VarAssignment("y"), VarExpression("x"))
+    val s2_1 = AssignmentStmt(VarAssignment("y"), MultExpression(VarExpression("y"), VarExpression("y")))
     val s2 = ForStmt(s2_0, LTExpression(VarExpression("y"), IntValue(100)), s2_1)
 
     val s3 = WriteStmt(VarExpression("y"))
@@ -349,8 +349,8 @@ test("Test control flow graph for stmt01.oberon") {
 
   test("Test control flow graph of CaseStatement with 2 regular cases and NO else case") {
 
-    val case0_stmt = AssignmentStmt("z", IntValue(1))
-    val case1_stmt = AssignmentStmt("z", IntValue(2))
+    val case0_stmt = AssignmentStmt(VarAssignment("z"), IntValue(1))
+    val case1_stmt = AssignmentStmt(VarAssignment("z"), IntValue(2))
     val case0 = SimpleCase(IntValue(0), case0_stmt)
     val case1 = SimpleCase(IntValue(1), case1_stmt)
     val cases = List(case0, case1)
@@ -382,9 +382,9 @@ test("Test control flow graph for stmt01.oberon") {
 
   test("Test control flow graph of CaseStatement with 2 regular cases and one else case") {
 
-    val case0_stmt = AssignmentStmt("z", IntValue(1))
-    val case1_stmt = AssignmentStmt("z", IntValue(2))
-    val caseE_stmt = AssignmentStmt("z", IntValue(3))
+    val case0_stmt = AssignmentStmt(VarAssignment("z"), IntValue(1))
+    val case1_stmt = AssignmentStmt(VarAssignment("z"), IntValue(2))
+    val caseE_stmt = AssignmentStmt(VarAssignment("z"), IntValue(3))
     val case0 = SimpleCase(IntValue(0), case0_stmt)
     val case1 = SimpleCase(IntValue(1), case1_stmt)
     val cases = List(case0, case1)
@@ -416,10 +416,10 @@ test("Test control flow graph for stmt01.oberon") {
 // Test control flow graph of CaseStatement with 3 regular cases and one else case
   test("Test control flow graph of CaseStatement with 3 regular cases and one else case") {
 
-    val case0_stmt = AssignmentStmt("z", AddExpression(VarExpression("a"), VarExpression("b")))
-    val case1_stmt = AssignmentStmt("z", SubExpression(VarExpression("a"), VarExpression("b")))
-    val case2_stmt = AssignmentStmt("z", MultExpression(VarExpression("a"), VarExpression("b")))
-    val caseE_stmt = AssignmentStmt("z", IntValue(0))
+    val case0_stmt = AssignmentStmt(VarAssignment("z"), AddExpression(VarExpression("a"), VarExpression("b")))
+    val case1_stmt = AssignmentStmt(VarAssignment("z"), SubExpression(VarExpression("a"), VarExpression("b")))
+    val case2_stmt = AssignmentStmt(VarAssignment("z"), MultExpression(VarExpression("a"), VarExpression("b")))
+    val caseE_stmt = AssignmentStmt(VarAssignment("z"), IntValue(0))
 
     val case0 = SimpleCase(IntValue(0), case0_stmt)
     val case1 = SimpleCase(IntValue(1), case1_stmt)
@@ -454,10 +454,10 @@ test("Test control flow graph for stmt01.oberon") {
 
   test("Test control flow graph of CaseStatement with 2 regular cases, 1 range case, one else case") {
 
-    val case0_stmt = AssignmentStmt("z", AddExpression(VarExpression("a"), VarExpression("b")))
-    val case1_stmt = AssignmentStmt("z", SubExpression(VarExpression("a"), VarExpression("b")))
-    val case2_stmt = AssignmentStmt("z", MultExpression(VarExpression("a"), VarExpression("b")))
-    val caseE_stmt = AssignmentStmt("z", IntValue(0))
+    val case0_stmt = AssignmentStmt(VarAssignment("z"), AddExpression(VarExpression("a"), VarExpression("b")))
+    val case1_stmt = AssignmentStmt(VarAssignment("z"), SubExpression(VarExpression("a"), VarExpression("b")))
+    val case2_stmt = AssignmentStmt(VarAssignment("z"), MultExpression(VarExpression("a"), VarExpression("b")))
+    val caseE_stmt = AssignmentStmt(VarAssignment("z"), IntValue(0))
 
     val case0 = SimpleCase(IntValue(0), case0_stmt)
     val case1 = SimpleCase(IntValue(1), case1_stmt)
@@ -491,10 +491,10 @@ test("Test control flow graph for stmt01.oberon") {
   }
 
   test("Test control flow graph RepeatUntilStmt 03 - 1 Expression and 1 Condition ") {
-    val stmt00 = AssignmentStmt("x", IntValue(3))
-    val stmt01 = AssignmentStmt("y", IntValue(4))
-    val stmt02 = AssignmentStmt("z", MultExpression (VarExpression ("x") , VarExpression("y")))
-    val stmt03 = AssignmentStmt("z", AddExpression (VarExpression ("z"), IntValue(5)))
+    val stmt00 = AssignmentStmt(VarAssignment("x"), IntValue(3))
+    val stmt01 = AssignmentStmt(VarAssignment("y"), IntValue(4))
+    val stmt02 = AssignmentStmt(VarAssignment("z"), MultExpression (VarExpression ("x") , VarExpression("y")))
+    val stmt03 = AssignmentStmt(VarAssignment("z"), AddExpression (VarExpression ("z"), IntValue(5)))
     val stmt04 = RepeatUntilStmt(LTExpression (VarExpression("z"), IntValue(50)), stmt03)
     val stmt05 = WriteStmt(VarExpression ("z"))
 
@@ -519,11 +519,11 @@ test("Test control flow graph for stmt01.oberon") {
   }
 
   test("Test control flow graph of RepeatUntil 05 with 2 expression and 1 condition ") {
-    val stmt2_1 = AssignmentStmt("max", VarExpression("x"))
+    val stmt2_1 = AssignmentStmt(VarAssignment("max"), VarExpression("x"))
     val stmt0 = ReadIntStmt("x")
     val stmt1 = ReadIntStmt("max")
     val stmt2 = IfElseStmt(GTExpression(VarExpression("x"), VarExpression("max")), stmt2_1 , None)
-    val stmt3 = AssignmentStmt("x", SubExpression(VarExpression("x"), IntValue(1)))
+    val stmt3 = AssignmentStmt(VarAssignment("x"), SubExpression(VarExpression("x"), IntValue(1)))
     val stmt4 = RepeatUntilStmt(LTExpression(VarExpression("x"), IntValue(10)), stmt3)
     val stmt5 = WriteStmt(VarExpression ("x"))
 
@@ -573,10 +573,10 @@ test("Test control flow graph for stmt01.oberon") {
 
   test("Test control flow graph of IfElseIfStmt with 3 if/else if and NO else case") {
 
-    val if_stmt = AssignmentStmt("y", IntValue(1))
-    val elsif1_stmt = AssignmentStmt("y", IntValue(2))
+    val if_stmt = AssignmentStmt(VarAssignment("y"), IntValue(1))
+    val elsif1_stmt = AssignmentStmt(VarAssignment("y"), IntValue(2))
     val elsif_case_1 = ElseIfStmt(LTExpression(VarExpression("x"), IntValue(7)), elsif1_stmt)
-    val elsif2_stmt = AssignmentStmt("y", IntValue(3))
+    val elsif2_stmt = AssignmentStmt(VarAssignment("y"), IntValue(3))
     val elsif_case_2 = ElseIfStmt(LTExpression(VarExpression("x"), IntValue(9)), elsif2_stmt)
 
     val elsif = List(elsif_case_1, elsif_case_2)
@@ -631,12 +631,12 @@ test("Test control flow graph for stmt01.oberon") {
 
   test("Test control flow graph of IfElseIfStmt with 3 if/else if and 1 else case") {
 
-    val if_stmt = AssignmentStmt("y", IntValue(1))
-    val elsif1_stmt = AssignmentStmt("y", IntValue(2))
+    val if_stmt = AssignmentStmt(VarAssignment("y"), IntValue(1))
+    val elsif1_stmt = AssignmentStmt(VarAssignment("y"), IntValue(2))
     val elsif_case_1 = ElseIfStmt(LTExpression(VarExpression("x"), IntValue(7)), elsif1_stmt)
-    val elsif2_stmt = AssignmentStmt("y", IntValue(3))
+    val elsif2_stmt = AssignmentStmt(VarAssignment("y"), IntValue(3))
     val elsif_case_2 = ElseIfStmt(LTExpression(VarExpression("x"), IntValue(9)), elsif2_stmt)
-    val else_stmt = AssignmentStmt("y", IntValue(4))
+    val else_stmt = AssignmentStmt(VarAssignment("y"), IntValue(4))
 
     val elsif = List(elsif_case_1, elsif_case_2)
 
@@ -695,10 +695,10 @@ test("Test control flow graph for stmt01.oberon") {
 
 
 test("Test control flow graph RepeatUntilStmt 02 - 1 Expression and 1 Condition ") {
-    val stmt00 = AssignmentStmt("x", IntValue(30))
-    val stmt01 = AssignmentStmt("y", IntValue(2))
-    val stmt02 = AssignmentStmt("z", DivExpression (VarExpression ("x") , VarExpression("y")))
-    val stmt03 = AssignmentStmt("z", AddExpression (VarExpression ("z"), IntValue(2)))
+    val stmt00 = AssignmentStmt(VarAssignment("x"), IntValue(30))
+    val stmt01 = AssignmentStmt(VarAssignment("y"), IntValue(2))
+    val stmt02 = AssignmentStmt(VarAssignment("z"), DivExpression (VarExpression ("x") , VarExpression("y")))
+    val stmt03 = AssignmentStmt(VarAssignment("z"), AddExpression (VarExpression ("z"), IntValue(2)))
     val stmt04 = RepeatUntilStmt(LTExpression (VarExpression("z"), IntValue(20)), stmt03)
     val stmt05 = WriteStmt(VarExpression ("z"))
 
